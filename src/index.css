@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background-color: #1A1612;
+    color: #F7F5F2;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #1A1612; }
+  ::-webkit-scrollbar-thumb { background: #3D3830; border-radius: 3px; }
+}
+
+@layer components {
+  .section-label {
+    @apply text-xs tracking-[0.2em] uppercase text-ember-400 font-body font-medium;
+  }
+
+  .display-heading {
+    font-family: 'Cormorant Garamond', serif;
+    @apply font-light leading-none tracking-tight;
+  }
+}
+
+/* Chat bubble arrow */
+.bubble-bot::before {
+  content: '';
+  position: absolute;
+  left: -6px; top: 14px;
+  border-width: 5px 6px 5px 0;
+  border-style: solid;
+  border-color: transparent #2A2520 transparent transparent;
+}
+
+.bubble-user::after {
+  content: '';
+  position: absolute;
+  right: -6px; top: 14px;
+  border-width: 5px 0 5px 6px;
+  border-style: solid;
+  border-color: transparent transparent transparent #B8622E;
+}
