@@ -1,7 +1,8 @@
-// ── API service — points to FastAPI backend at localhost:8000 ──
+// Use VITE_API_URL if provided, or default to the live URL for production, and '/api' for local development proxy.
 import axios from 'axios'
+const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? '/api' : 'https://spice-garden-backend.onrender.com/api')
 
-const api = axios.create({ baseURL: '/api' })
+export const api = axios.create({ baseURL: API_BASE_URL })
 
 export const menuAPI = {
   getAll:        ()         => api.get('/menu'),

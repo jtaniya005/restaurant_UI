@@ -15,8 +15,8 @@ export default function App() {
   function addToCart(item) {
     setCart(prev => {
       const existing = prev.find(i => i.id === item.id)
-      if (existing) return prev.map(i => i.id === item.id ? { ...i, qty: i.qty + 1 } : i)
-      return [...prev, { ...item, qty: 1 }]
+      if (existing) return prev.map(i => i.id === item.id ? { ...i, qty: i.qty + item.qty } : i)
+      return [...prev, { ...item, qty: item.qty || 1 }]
     })
   }
 
@@ -56,9 +56,12 @@ export default function App() {
       <ChatWindow
         open={chatOpen}
         onClose={() => setChatOpen(false)}
+        onAddToCart={(item) => {
+          addToCart(item)
+          setCartOpen(true) // cart automatically open ho jaye
+        }}
       />
 
-      {/* FAB only visible when chat is closed */}
       {!chatOpen && (
         <ChatFAB open={chatOpen} onClick={() => setChatOpen(true)} />
       )}
