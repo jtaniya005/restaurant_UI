@@ -16,7 +16,7 @@ export const orderAPI = {
 }
 
 export const chatAPI = {
-  send: (messages) => api.post('/chat', { messages }),
+  send: (messages) => api.post('/chat/', { messages }),
 }
 
 // ── Static fallback menu (used when backend is not running) ──

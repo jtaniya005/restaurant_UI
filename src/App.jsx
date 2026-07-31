@@ -11,11 +11,16 @@ export default function App() {
   const [cart, setCart] = useState([])
   const [cartOpen, setCartOpen] = useState(false)
   const [chatOpen, setChatOpen] = useState(false)
+  const [customerName, setCustomerName] = useState(null)
+  const [paymentMethod, setPaymentMethod] = useState(null)
 
-  function addToCart(item) {
+  function addToCart(item, cName, pMethod) {
+    if (cName) setCustomerName(cName)
+    if (pMethod) setPaymentMethod(pMethod)
+
     setCart(prev => {
       const existing = prev.find(i => i.id === item.id)
-      if (existing) return prev.map(i => i.id === item.id ? { ...i, qty: i.qty + (item.qty || 1) } : i)
+      if (existing) return prev.map(i => i.id === item.id ? { ...i, qty: i.qty + (item.qty || 1), instructions: item.instructions || i.instructions } : i)
       return [...prev, { ...item, qty: item.qty || 1 }]
     })
   }
@@ -53,13 +58,15 @@ export default function App() {
         cart={cart}
         onUpdate={updateQty}
         onRemove={removeItem}
+        customerName={customerName}
+        paymentMethod={paymentMethod}
       />
 
       <ChatWindow
         open={chatOpen}
         onClose={() => setChatOpen(false)}
-        onAddToCart={(item) => {
-          addToCart(item)
+        onAddToCart={(item, cName, pMethod) => {
+          addToCart(item, cName, pMethod)
           setCartOpen(true)
         }}
       />

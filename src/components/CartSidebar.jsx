@@ -1,6 +1,6 @@
 import { X, Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react'
 
-export default function CartSidebar({ open, onClose, cart, onUpdate, onRemove }) {
+export default function CartSidebar({ open, onClose, cart, onUpdate, onRemove, customerName, paymentMethod }) {
   const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0)
 
   return (
@@ -11,9 +11,14 @@ export default function CartSidebar({ open, onClose, cart, onUpdate, onRemove })
         open ? 'translate-x-0' : 'translate-x-full'
       }`}>
         <div className="flex items-center justify-between px-6 py-5 border-b border-gold-400/20 bg-ink-950/80">
-          <div className="flex items-center gap-2">
-            <ShoppingBag size={18} className="text-gold-300" />
-            <span className="font-display text-lg text-ink-50 font-light tracking-wide">Your Order</span>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2">
+              <ShoppingBag size={18} className="text-gold-300" />
+              <span className="font-display text-lg text-ink-50 font-light tracking-wide">Your Order</span>
+            </div>
+            {customerName && (
+              <p className="text-xs text-gold-400/80 uppercase tracking-wide">For: {customerName}</p>
+            )}
           </div>
           <button onClick={onClose} className="p-1.5 text-ink-400 hover:text-gold-300 transition-colors">
             <X size={18} />
@@ -68,6 +73,12 @@ export default function CartSidebar({ open, onClose, cart, onUpdate, onRemove })
 
         {cart.length > 0 && (
           <div className="px-6 py-6 border-t border-gold-400/20 flex flex-col gap-5 bg-ink-950/80">
+            {paymentMethod && (
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-ink-400 uppercase tracking-wider">Payment Method</span>
+                <span className="text-gold-300 bg-gold-400/10 px-2 py-1 rounded-sm border border-gold-400/20">{paymentMethod}</span>
+              </div>
+            )}
             <div className="flex justify-between items-end">
               <span className="text-ink-400 text-sm uppercase tracking-wider">Total Amount</span>
               <span className="font-display text-3xl text-gold-300 font-light">

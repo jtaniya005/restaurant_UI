@@ -112,7 +112,7 @@ export default function ChatWindow({ open, onClose, onAddToCart }) {
       const timer = setTimeout(() => {
         setLanguage(null)
         setMessages([])
-        api.delete(`/chat/${sessionId}/`).catch(() => {})
+        api.delete(`/chat/${sessionId}`).catch(() => {})
       }, 300)
       return () => clearTimeout(timer)
     }
@@ -154,10 +154,12 @@ export default function ChatWindow({ open, onClose, onAddToCart }) {
 
       const reply = res.data.reply
       const orderItems = res.data.order_items || []
+      const customerName = res.data.customer_name || null
+      const paymentMethod = res.data.payment_method || null
       let cartAdded = false
 
       if (orderItems.length > 0 && onAddToCart) {
-        orderItems.forEach(item => onAddToCart(item))
+        orderItems.forEach(item => onAddToCart(item, customerName, paymentMethod))
         cartAdded = true
       }
 
@@ -178,7 +180,7 @@ export default function ChatWindow({ open, onClose, onAddToCart }) {
   }
 
   async function clearChat() {
-    try { await api.delete(`/chat/${sessionId}/`) } catch {}
+    try { await api.delete(`/chat/${sessionId}`) } catch {}
     setLanguage(null)
     setMessages([])
   }
