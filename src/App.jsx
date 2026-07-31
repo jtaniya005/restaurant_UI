@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import MenuSection from './components/MenuSection'
-import { AboutSection, Footer } from './components/StaticSections'
+import { AboutSection, BookTableSection, Footer } from './components/StaticSections'
 import CartSidebar from './components/CartSidebar'
 import ChatWindow from './components/ChatWindow'
 import ChatFAB from './components/ChatFAB'
@@ -15,7 +15,7 @@ export default function App() {
   function addToCart(item) {
     setCart(prev => {
       const existing = prev.find(i => i.id === item.id)
-      if (existing) return prev.map(i => i.id === item.id ? { ...i, qty: i.qty + item.qty } : i)
+      if (existing) return prev.map(i => i.id === item.id ? { ...i, qty: i.qty + (item.qty || 1) } : i)
       return [...prev, { ...item, qty: item.qty || 1 }]
     })
   }
@@ -31,7 +31,7 @@ export default function App() {
   const cartCount = cart.reduce((s, i) => s + i.qty, 0)
 
   return (
-    <div className="min-h-screen bg-ink-900">
+    <div className="min-h-screen bg-dark-950">
       <Navbar
         cartCount={cartCount}
         onCartOpen={() => setCartOpen(true)}
@@ -41,6 +41,7 @@ export default function App() {
       <main>
         <Hero onChatOpen={() => setChatOpen(true)} />
         <MenuSection onAdd={addToCart} cart={cart} />
+        <BookTableSection />
         <AboutSection />
         <Footer />
       </main>
@@ -58,7 +59,7 @@ export default function App() {
         onClose={() => setChatOpen(false)}
         onAddToCart={(item) => {
           addToCart(item)
-          setCartOpen(true) // cart automatically open ho jaye
+          setCartOpen(true)
         }}
       />
 

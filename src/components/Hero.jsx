@@ -1,81 +1,63 @@
 import { ArrowDown } from 'lucide-react'
+import heroBg from '../assets/hero-bg.png'
+
+// ── Inline Booking Bar (like reference image) ─────────────────────────────────
+function InlineBookingBar({ onOpenFullForm }) {
+  return (
+    <div className="relative z-10 mt-14 w-full max-w-3xl mx-auto">
+      <div className="glass-card rounded-none border border-gold-400/20 p-4 flex flex-col sm:flex-row items-stretch gap-3">
+        <input type="date" min={new Date().toISOString().split('T')[0]}
+          className="flex-1 bg-ink-800/50 border border-gold-400/15 px-4 py-2.5 text-sm text-ink-100 outline-none focus:border-gold-400/50" />
+        <select className="flex-1 bg-ink-800/50 border border-gold-400/15 px-4 py-2.5 text-sm text-ink-100 outline-none focus:border-gold-400/50">
+          <option>Select Time</option>
+          {['12:00 PM', '1:00 PM', '7:00 PM', '8:00 PM', '9:00 PM'].map(t => <option key={t}>{t}</option>)}
+        </select>
+        <select className="flex-1 bg-ink-800/50 border border-gold-400/15 px-4 py-2.5 text-sm text-ink-100 outline-none focus:border-gold-400/50">
+          {[2, 3, 4, 5, 6].map(n => <option key={n}>{n} Guests</option>)}
+        </select>
+        <button onClick={onOpenFullForm} className="btn-gold whitespace-nowrap">Reserve Now</button>
+      </div>
+    </div>
+  )
+}
 
 export default function Hero({ onChatOpen }) {
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
-
-      {/* Ambient background */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full opacity-20"
-          style={{ background: 'radial-gradient(ellipse, #B8622E 0%, transparent 70%)' }}
-        />
-        <div
-          className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full opacity-10"
-          style={{ background: 'radial-gradient(ellipse, #D4855A 0%, transparent 70%)' }}
-        />
-        {/* Subtle grid */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
-              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#F7F5F2" strokeWidth="0.5"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#grid)" />
-        </svg>
+      {/* Background image placeholder — replace with your own hero food photo */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: `url(${heroBg})` }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-ink-950/70 via-ink-950/80 to-ink-950" />
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto animate-fade-up">
-        {/* Eyebrow */}
         <div className="inline-flex items-center gap-3 mb-8">
-          <div className="h-px w-12 bg-ember-500/60" />
-          <span className="section-label">Jodhpur, Rajasthan · Est. 2005</span>
-          <div className="h-px w-12 bg-ember-500/60" />
+          <div className="h-px w-12 bg-gold-400/50" />
+          <span className="section-label">Jodhpur · Est. 2005 · 100% Pure Veg</span>
+          <div className="h-px w-12 bg-gold-400/50" />
         </div>
 
-        {/* Headline */}
-        <h1 className="display-heading text-ink-50 mb-6" style={{ fontSize: 'clamp(3.5rem, 10vw, 8rem)' }}>
-          Where Spice<br />
-          <em className="text-ember-400 not-italic">Meets Soul</em>
+        <h1 className="display-heading text-ink-50 mb-6 drop-shadow-xl" style={{ fontSize: 'clamp(2.8rem, 8vw, 6.5rem)' }}>
+          Welcome to a<br />
+          <em className="not-italic text-gold-300">Fine Dining Experience</em>
         </h1>
 
-        <p className="text-ink-300 text-lg font-light max-w-xl mx-auto leading-relaxed mb-10">
-          From the royal kitchens of Rajasthan to your table — flavours handcrafted with generations of tradition and a modern touch.
+        <p className="text-ink-300 text-lg font-light max-w-xl mx-auto leading-relaxed mb-8 drop-shadow-md">
+          Savour the flavours of royal Rajasthani vegetarian cuisine, crafted with generations of tradition in an elegant, modern ambiance.
         </p>
 
-        {/* CTAs */}
         <div className="flex flex-col sm:flex-row items-center gap-4 justify-center">
-          <a
-            href="#menu"
-            className="px-8 py-3.5 bg-ember-500 text-ink-50 rounded-full text-sm font-medium tracking-wide hover:bg-ember-400 transition-colors duration-200"
-          >
-            Explore the Menu
-          </a>
-          <button
-            onClick={onChatOpen}
-            className="px-8 py-3.5 border border-ink-700 text-ink-200 rounded-full text-sm font-medium tracking-wide hover:border-ember-500/50 hover:text-ink-50 transition-all duration-200"
-          >
-            💬 Chat & Order with AI
-          </button>
+          <a href="#book-table" className="btn-gold">Book a Table</a>
+          <button onClick={onChatOpen} className="btn-outline-gold">💬 Chat & Order with AI</button>
         </div>
       </div>
 
-      {/* Stats row */}
-      <div className="relative z-10 mt-20 grid grid-cols-3 gap-8 max-w-lg mx-auto w-full border-t border-ink-700/40 pt-8">
-        {[
-          { num: '200+', label: 'Dishes' },
-          { num: '20yr', label: 'Legacy' },
-          { num: '4.9★', label: 'Rating' },
-        ].map(s => (
-          <div key={s.label} className="text-center">
-            <div className="font-display text-2xl text-ember-400 font-light">{s.num}</div>
-            <div className="text-xs text-ink-500 mt-1 tracking-widest uppercase">{s.label}</div>
-          </div>
-        ))}
-      </div>
+      {/* Inline reservation bar */}
+      <InlineBookingBar onOpenFullForm={() => document.getElementById('book-table')?.scrollIntoView({ behavior: 'smooth' })} />
 
-      {/* Scroll hint */}
-      <a href="#menu" className="absolute bottom-8 left-1/2 -translate-x-1/2 text-ink-600 hover:text-ink-400 transition-colors animate-shimmer">
+      <a href="#menu" className="absolute bottom-8 left-1/2 -translate-x-1/2 text-gold-400/50 hover:text-gold-400 transition-colors animate-shimmer">
         <ArrowDown size={18} />
       </a>
     </section>
