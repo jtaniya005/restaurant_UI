@@ -107,6 +107,17 @@ export default function ChatWindow({ open, onClose, onAddToCart }) {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, loading])
 
+  useEffect(() => {
+    if (!open && language !== null) {
+      const timer = setTimeout(() => {
+        setLanguage(null)
+        setMessages([])
+        api.delete(`/chat/${sessionId}/`).catch(() => {})
+      }, 300)
+      return () => clearTimeout(timer)
+    }
+  }, [open, language, sessionId])
+
   function handleLanguageSelect(lang) {
     setLanguage(lang)
     const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -125,10 +136,10 @@ export default function ChatWindow({ open, onClose, onAddToCart }) {
 
     try {
       const langInstruction = language === 'english'
-        ? 'STRICT RULE: You MUST reply ONLY in English throughout this entire conversation. Never use Hindi or Hinglish words.'
+        ? 'STRICT RULE: You MUST reply ONLY in natural English throughout this entire conversation. Never use Hindi or Hinglish words.'
         : language === 'hindi'
-        ? 'STRICT RULE: आप इस पूरी बातचीत में केवल हिंदी में जवाब दें।'
-        : 'STRICT RULE: You MUST reply in Hinglish (natural mix of Hindi and English) throughout this entire conversation.'
+        ? 'STRICT RULE: Reply ONLY in natural, spoken Hindi using the Devanagari script (e.g. "वेज स्प्रिंग रोल्स बहुत बढ़िया हैं!"). DO NOT use highly formal/robotic Hindi translation. Keep dish names as they sound (Veg = वेज, not वेग).'
+        : 'STRICT RULE: You MUST reply in Hinglish (natural mix of Hindi and English written in Latin script) throughout this entire conversation.'
 
       const messagesWithLang = [
         { role: 'user', content: langInstruction },

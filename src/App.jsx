@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import MenuSection from './components/MenuSection'
-import { AboutSection, BookTableSection, Footer } from './components/StaticSections'
+import { AboutSection, BookTableSection, ReviewsSection, Footer } from './components/StaticSections'
 import CartSidebar from './components/CartSidebar'
 import ChatWindow from './components/ChatWindow'
 import ChatFAB from './components/ChatFAB'
@@ -42,6 +42,7 @@ export default function App() {
         <Hero onChatOpen={() => setChatOpen(true)} />
         <MenuSection onAdd={addToCart} cart={cart} />
         <BookTableSection />
+        <ReviewsSection />
         <AboutSection />
         <Footer />
       </main>

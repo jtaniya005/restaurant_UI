@@ -14,6 +14,7 @@ export default function Navbar({ cartCount, onCartOpen, onChatOpen }) {
   const links = [
     { label: 'Menu', href: '#menu' },
     { label: 'Reservations', href: '#book-table' },
+    { label: 'Reviews', href: '#reviews' },
     { label: 'About', href: '#about' },
     { label: 'Contact', href: '#contact' },
   ]

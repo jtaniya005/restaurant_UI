@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Plus, Flame, Leaf, Star, Check, Search, X, SlidersHorizontal } from 'lucide-react'
+import { Plus, Flame, Leaf, Star, Check, Search, X, SlidersHorizontal, ChevronDown } from 'lucide-react'
 import { MENU_ITEMS, CATEGORIES } from '../services'
 
 import indianImg1 from '../assets/categories/indian.png'
@@ -108,11 +108,10 @@ function MenuCard({ item, onAdd, cart }) {
           {item.spice > 0 && <SpiceDots level={item.spice} />}
         </div>
         <button onClick={handleAdd}
-          className={`flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-medium transition-all duration-200 ${
-            added || isInCart
+          className={`flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-medium transition-all duration-200 ${added || isInCart
               ? 'bg-green-500/20 text-green-400 border border-green-500/30'
               : 'bg-gold-400/10 text-gold-300 border border-gold-400/30 hover:bg-gold-400 hover:text-ink-950'
-          }`}>
+            }`}>
           {added || isInCart ? <><Check size={13} /> Added</> : <><Plus size={14} /> Add</>}
         </button>
       </div>
@@ -128,17 +127,71 @@ const PRICE_RANGES = [
   { label: '₹300+', min: 300, max: Infinity },
 ]
 
+function MenuListItem({ item, onAdd, cart }) {
+  const isInCart = cart?.some(i => i.id === item.id) || false
+  const [added, setAdded] = useState(false)
+
+  function handleAdd() {
+    onAdd(item)
+    setAdded(true)
+    setTimeout(() => setAdded(false), 1200)
+  }
+
+  return (
+    <div className="flex flex-col border-b border-gold-400/10 pb-4 group">
+      <div className="flex justify-between items-baseline mb-2 gap-4">
+        <h4 className="font-display text-ink-50 text-xl font-light tracking-wide group-hover:text-gold-300 transition-colors">
+          {item.name}
+        </h4>
+        <div className="flex-1 border-b border-dotted border-gold-400/20 mx-2 relative -top-1 opacity-50 hidden sm:block"></div>
+        <div className="flex items-center gap-4 shrink-0">
+          <div className="flex flex-col items-end">
+            <span className="text-gold-300 font-display text-lg">₹{item.price}</span>
+            {item.spice > 0 && <div className="mt-1"><SpiceDots level={item.spice} /></div>}
+          </div>
+          <button onClick={handleAdd}
+            className={`w-8 h-8 rounded-none border flex items-center justify-center transition-all ${added || isInCart
+                ? 'bg-green-500/10 border-green-500/30 text-green-400'
+                : 'border-gold-400/20 text-ink-400 hover:border-gold-400 hover:text-gold-300 hover:bg-gold-400/5'
+              }`}>
+            {added || isInCart ? <Check size={14} /> : <Plus size={14} />}
+          </button>
+        </div>
+      </div>
+      <p className="text-sm text-ink-400 leading-relaxed pr-16 line-clamp-2">{item.description}</p>
+
+      <div className="flex flex-wrap gap-1.5 mt-2">
+        {item.tags?.includes('veg') && (
+          <span className="inline-flex items-center gap-1 text-[10px] text-green-400 uppercase tracking-widest opacity-80">
+            <Leaf size={8} /> Veg
+          </span>
+        )}
+        {item.tags?.includes('spicy') && (
+          <span className="inline-flex items-center gap-1 text-[10px] text-red-400 uppercase tracking-widest opacity-80 ml-2">
+            <Flame size={8} /> Spicy
+          </span>
+        )}
+        {item.tags?.includes('special') && (
+          <span className="inline-flex items-center gap-1 text-[10px] text-gold-400 uppercase tracking-widest opacity-80 ml-2">
+            <Star size={8} className="fill-gold-400" /> Chef's Pick
+          </span>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export default function MenuSection({ onAdd, cart }) {
   const [activeCategory, setActiveCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [priceRange, setPriceRange] = useState(0)
   const [showFilters, setShowFilters] = useState(false)
-  const [itemsToShow, setItemsToShow] = useState(9)
+  const [showFullMenu, setShowFullMenu] = useState(false)
 
   const filtered = useMemo(() => {
     const range = PRICE_RANGES[priceRange]
     return MENU_ITEMS.filter(item => {
-      const matchCat = activeCategory === 'all' || item.category === activeCategory
+      const matchCat = activeCategory === 'all' || item.category?.toLowerCase() === activeCategory?.toLowerCase()
       const matchSearch = !searchQuery ||
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.description?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -147,8 +200,8 @@ export default function MenuSection({ onAdd, cart }) {
     })
   }, [activeCategory, searchQuery, priceRange])
 
-  const displayed = filtered.slice(0, itemsToShow)
-  const hasMore = filtered.length > itemsToShow
+  const featuredItems = filtered.slice(0, 6)
+  const listItems = filtered.slice(6)
   const hasActiveFilters = activeCategory !== 'all' || searchQuery || priceRange !== 0
 
   return (
@@ -163,7 +216,7 @@ export default function MenuSection({ onAdd, cart }) {
             <div className="relative">
               <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-500" />
               <input type="text" value={searchQuery}
-                onChange={e => { setSearchQuery(e.target.value); setItemsToShow(9) }}
+                onChange={e => { setSearchQuery(e.target.value); setShowFullMenu(false) }}
                 placeholder="Search dishes..."
                 className="w-48 sm:w-56 bg-ink-800/50 border border-gold-400/20 pl-9 pr-4 py-2 text-sm text-ink-100 placeholder-ink-500 outline-none focus:border-gold-400/40" />
               {searchQuery && (
@@ -173,9 +226,8 @@ export default function MenuSection({ onAdd, cart }) {
               )}
             </div>
             <button onClick={() => setShowFilters(v => !v)}
-              className={`flex items-center gap-1.5 px-3 py-2 text-sm border transition-all ${
-                showFilters || priceRange !== 0 ? 'bg-gold-400 text-ink-950 border-gold-400' : 'border-gold-400/20 text-ink-400 hover:border-gold-400/40'
-              }`}>
+              className={`flex items-center gap-1.5 px-3 py-2 text-sm border transition-all ${showFilters || priceRange !== 0 ? 'bg-gold-400 text-ink-950 border-gold-400' : 'border-gold-400/20 text-ink-400 hover:border-gold-400/40'
+                }`}>
               <SlidersHorizontal size={14} />
             </button>
           </div>
@@ -188,10 +240,9 @@ export default function MenuSection({ onAdd, cart }) {
             <p className="text-xs text-ink-400 mb-3 tracking-wide uppercase">Price Range</p>
             <div className="flex flex-wrap gap-2">
               {PRICE_RANGES.map((range, idx) => (
-                <button key={range.label} onClick={() => { setPriceRange(idx); setItemsToShow(9) }}
-                  className={`px-3 py-1.5 text-xs transition-all ${
-                    priceRange === idx ? 'bg-gold-400 text-ink-950' : 'border border-gold-400/20 text-ink-400 hover:border-gold-400/40'
-                  }`}>
+                <button key={range.label} onClick={() => { setPriceRange(idx); setShowFullMenu(false) }}
+                  className={`px-3 py-1.5 text-xs transition-all ${priceRange === idx ? 'bg-gold-400 text-ink-950' : 'border border-gold-400/20 text-ink-400 hover:border-gold-400/40'
+                    }`}>
                   {range.label}
                 </button>
               ))}
@@ -202,10 +253,9 @@ export default function MenuSection({ onAdd, cart }) {
 
       <div className="flex gap-2 flex-wrap mb-10 overflow-x-auto pb-1">
         {CATEGORIES.map(cat => (
-          <button key={cat.id} onClick={() => { setActiveCategory(cat.id); setItemsToShow(9) }}
-            className={`px-4 py-1.5 text-sm transition-all whitespace-nowrap uppercase tracking-wide ${
-              activeCategory === cat.id ? 'bg-gold-400 text-ink-950' : 'border border-gold-400/20 text-ink-400 hover:border-gold-400/40'
-            }`}>
+          <button key={cat.id} onClick={() => { setActiveCategory(cat.id); setShowFullMenu(false) }}
+            className={`px-4 py-1.5 text-sm transition-all whitespace-nowrap uppercase tracking-wide ${activeCategory === cat.id ? 'bg-gold-400 text-ink-950' : 'border border-gold-400/20 text-ink-400 hover:border-gold-400/40'
+              }`}>
             {cat.label}
           </button>
         ))}
@@ -217,15 +267,29 @@ export default function MenuSection({ onAdd, cart }) {
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
-        {displayed.map(item => <MenuCard key={item.id} item={item} onAdd={onAdd} cart={cart} />)}
-      </div>
+      {featuredItems.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
+          {featuredItems.map(item => <MenuCard key={item.id} item={item} onAdd={onAdd} cart={cart} />)}
+        </div>
+      )}
 
-      {hasMore && (
-        <div className="flex justify-center">
-          <button onClick={() => setItemsToShow(prev => prev + 9)} className="btn-outline-gold">
-            Load More
+      {listItems.length > 0 && !showFullMenu && (
+        <div className="flex justify-center mt-8 mb-4">
+          <button onClick={() => setShowFullMenu(true)} className="btn-outline-gold flex items-center gap-2">
+            Explore Full Menu <ChevronDown size={14} />
           </button>
+        </div>
+      )}
+
+      {listItems.length > 0 && showFullMenu && (
+        <div className="mt-16 pt-16 border-t border-gold-400/10">
+          <div className="text-center mb-16">
+            <span className="text-gold-400 text-xs tracking-[0.2em] uppercase mb-4 block">Complete Selection</span>
+            <h3 className="display-heading text-ink-50 text-4xl sm:text-5xl">Full Menu</h3>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-12">
+            {listItems.map(item => <MenuListItem key={item.id} item={item} onAdd={onAdd} cart={cart} />)}
+          </div>
         </div>
       )}
     </section>
