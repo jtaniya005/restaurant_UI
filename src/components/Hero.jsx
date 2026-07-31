@@ -23,7 +23,7 @@ function InlineBookingBar({ onOpenFullForm }) {
 
 export default function Hero({ onChatOpen }) {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-24 pb-12 overflow-hidden">
       {/* Background image placeholder — replace with your own hero food photo */}
       <div
         className="absolute inset-0 bg-cover bg-center"
