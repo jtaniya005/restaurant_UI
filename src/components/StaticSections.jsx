@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Star } from 'lucide-react'
 import { api } from '../services'
 
 export function AboutSection() {
@@ -130,6 +131,65 @@ export function BookTableSection() {
             </div>
           </form>
         )}
+      </div>
+    </section>
+  )
+}
+
+export function ReviewsSection() {
+  const reviews = [
+    {
+      id: 1,
+      author: "Priya Sharma",
+      date: "October 2025",
+      rating: 5,
+      title: "An AI ordering experience like no other!",
+      text: "I was blown away by the AI Chatbot! It understood my dietary preferences perfectly and suggested the best meal. The Dal Baati Churma was absolutely authentic and delicious.",
+    },
+    {
+      id: 2,
+      author: "Rahul Verma",
+      date: "November 2025",
+      rating: 5,
+      title: "Authentic Rajasthani Flavors",
+      text: "The Laal Maas is incredible, and the ambiance is unmatched. Every bite feels like a royal feast from Jodhpur. I highly recommend the Chef's special desserts too!",
+    },
+    {
+      id: 3,
+      author: "Anita Desai",
+      date: "December 2025",
+      rating: 5,
+      title: "Perfect for family dinners",
+      text: "We booked a table using the website, and the AI even gave us dish recommendations for our group of 6. The food was hot, fresh, and served exactly on time.",
+    }
+  ]
+
+  return (
+    <section id="reviews" className="py-24 px-6 border-t border-gold-400/10 bg-ink-900/30">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-16">
+          <p className="section-label mb-3">Testimonials</p>
+          <h2 className="display-heading text-ink-50 mb-4" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)' }}>Guest Reviews & Stories</h2>
+          <p className="text-ink-400 text-sm max-w-md mx-auto">See what our beloved patrons have to say about our authentic cuisine and seamless AI ordering.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {reviews.map(review => (
+            <div key={review.id} className="glass-card p-6 flex flex-col gap-4 hover:border-gold-400/30 transition-all duration-300 hover:-translate-y-1">
+              <div className="flex gap-1">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} size={14} className={i < review.rating ? "fill-gold-400 text-gold-400" : "fill-ink-700 text-ink-700"} />
+                ))}
+              </div>
+              <h3 className="font-display text-lg text-ink-100 font-medium leading-snug">{review.title}</h3>
+              <p className="text-ink-400 text-sm leading-relaxed flex-grow">"{review.text}"</p>
+              <div className="pt-4 border-t border-gold-400/10 flex items-center justify-between">
+                <span className="text-gold-300 text-sm font-medium">{review.author}</span>
+                <span className="text-ink-500 text-xs">{review.date}</span>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   )
