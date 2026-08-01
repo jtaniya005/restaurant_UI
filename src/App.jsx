@@ -60,6 +60,8 @@ export default function App() {
         onRemove={removeItem}
         customerName={customerName}
         paymentMethod={paymentMethod}
+        onCustomerNameChange={setCustomerName}
+        onPaymentMethodChange={setPaymentMethod}
       />
 
       <ChatWindow

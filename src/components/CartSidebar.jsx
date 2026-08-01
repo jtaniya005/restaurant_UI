@@ -1,6 +1,6 @@
 import { X, Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react'
 
-export default function CartSidebar({ open, onClose, cart, onUpdate, onRemove, customerName, paymentMethod }) {
+export default function CartSidebar({ open, onClose, cart, onUpdate, onRemove, customerName, paymentMethod, onCustomerNameChange, onPaymentMethodChange }) {
   const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0)
 
   return (
@@ -73,12 +73,29 @@ export default function CartSidebar({ open, onClose, cart, onUpdate, onRemove, c
 
         {cart.length > 0 && (
           <div className="px-6 py-6 border-t border-gold-400/20 flex flex-col gap-5 bg-ink-950/80">
-            {paymentMethod && (
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-ink-400 uppercase tracking-wider">Payment Method</span>
-                <span className="text-gold-300 bg-gold-400/10 px-2 py-1 rounded-sm border border-gold-400/20">{paymentMethod}</span>
-              </div>
-            )}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs text-ink-400 uppercase tracking-wider">Name</label>
+              <input 
+                type="text" 
+                placeholder="Enter your name"
+                value={customerName || ''}
+                onChange={(e) => onCustomerNameChange && onCustomerNameChange(e.target.value)}
+                className="bg-ink-800/50 border border-gold-400/20 px-3 py-2 text-sm text-ink-50 placeholder-ink-600 outline-none focus:border-gold-400/50"
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs text-ink-400 uppercase tracking-wider">Payment Method</label>
+              <select 
+                value={paymentMethod || ''}
+                onChange={(e) => onPaymentMethodChange && onPaymentMethodChange(e.target.value)}
+                className="bg-ink-800/50 border border-gold-400/20 px-3 py-2 text-sm text-ink-50 outline-none focus:border-gold-400/50"
+              >
+                <option value="">Select Payment Method</option>
+                <option value="Cash">Cash</option>
+                <option value="Card">Card</option>
+                <option value="UPI">UPI</option>
+              </select>
+            </div>
             <div className="flex justify-between items-end">
               <span className="text-ink-400 text-sm uppercase tracking-wider">Total Amount</span>
               <span className="font-display text-3xl text-gold-300 font-light">
