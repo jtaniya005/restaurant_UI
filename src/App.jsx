@@ -33,6 +33,16 @@ export default function App() {
     setCart(prev => prev.filter(i => i.id !== id))
   }
 
+  function handlePlaceOrder() {
+    if (cart.length === 0) return
+    const name = customerName || 'Guest'
+    alert(`Thank you, ${name}! Your order has been placed successfully.`)
+    setCart([])
+    setCartOpen(false)
+    setCustomerName(null)
+    setPaymentMethod(null)
+  }
+
   const cartCount = cart.reduce((s, i) => s + i.qty, 0)
 
   return (
@@ -62,6 +72,7 @@ export default function App() {
         paymentMethod={paymentMethod}
         onCustomerNameChange={setCustomerName}
         onPaymentMethodChange={setPaymentMethod}
+        onPlaceOrder={handlePlaceOrder}
       />
 
       <ChatWindow

@@ -1,6 +1,6 @@
 import { X, Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react'
 
-export default function CartSidebar({ open, onClose, cart, onUpdate, onRemove, customerName, paymentMethod, onCustomerNameChange, onPaymentMethodChange }) {
+export default function CartSidebar({ open, onClose, cart, onUpdate, onRemove, customerName, paymentMethod, onCustomerNameChange, onPaymentMethodChange, onPlaceOrder }) {
   const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0)
 
   return (
@@ -102,7 +102,7 @@ export default function CartSidebar({ open, onClose, cart, onUpdate, onRemove, c
                 ₹{total}
               </span>
             </div>
-            <button className="btn-gold w-full text-center py-4 text-base">
+            <button onClick={onPlaceOrder} className="btn-gold w-full text-center py-4 text-base">
               Place Order
             </button>
             <p className="text-center text-xs text-ink-500 uppercase tracking-widest">Estimated delivery: 25–30 min</p>
