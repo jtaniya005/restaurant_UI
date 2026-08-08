@@ -81,6 +81,7 @@ export default function App() {
         onAddToCart={(item, cName, pMethod) => {
           addToCart(item, cName, pMethod)
           setCartOpen(true)
+          setTimeout(() => setChatOpen(false), 1500)
         }}
       />
 
